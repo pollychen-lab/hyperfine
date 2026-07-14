@@ -45,6 +45,17 @@ fn rejects_unknown_shell_completion() {
 }
 
 #[test]
+fn rejects_benchmark_command_with_shell_completion_subcommand() {
+    hyperfine()
+        .arg("echo ok")
+        .arg("generate-shell-completion")
+        .arg("fish")
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("cannot be used with"));
+}
+
+#[test]
 fn one_run_is_supported() {
     hyperfine()
         .arg("--runs=1")
