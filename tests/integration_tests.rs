@@ -25,6 +25,26 @@ fn runs_successfully() {
 }
 
 #[test]
+fn generates_shell_completion() {
+    hyperfine()
+        .arg("generate-shell-completion")
+        .arg("fish")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("complete").and(predicate::str::contains("hyperfine")));
+}
+
+#[test]
+fn rejects_unknown_shell_completion() {
+    hyperfine()
+        .arg("generate-shell-completion")
+        .arg("unknown")
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("invalid value 'unknown'"));
+}
+
+#[test]
 fn one_run_is_supported() {
     hyperfine()
         .arg("--runs=1")
